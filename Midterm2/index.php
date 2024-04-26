@@ -1,4 +1,7 @@
 <?php
+// ini_set('session.use_only_cookies', 1);
+session_start();
+session_regenerate_id();
 
 require_once "login.php";
 require_once "sql.php";
@@ -49,9 +52,9 @@ if (isset($_POST["signup"])) {
         && !empty($_POST["name"]) && !empty($_POST["usernameSignupBox"]) && !empty($_POST["passwordSignupBox"])
     ) {
         // sanitize input
-        $name = sanitize_input($_POST["name"]);
-        $username = sanitize_input($_POST['usernameSignupBox']);
-        $password = sanitize_input($_POST["passwordSignupBox"]);
+        $name = Common::sanitize_input($_POST["name"]);
+        $username = Common::sanitize_input($_POST['usernameSignupBox']);
+        $password = Common::sanitize_input($_POST["passwordSignupBox"]);
         // store new user in db
         $result = $mysql->insert_user($name, $username, $password);
         // if there is any server issue (no table/duplicated user/connection issue)
@@ -89,9 +92,11 @@ if (isset($_POST["signup"])) {
                 // make sure the passwords matched
                 if (password_verify($password, $row['password'])) {
                     // start session
-                    session_start();
+                    // session_start();
                     $_SESSION['name'] = $row['name'];
                     $_SESSION['id'] = $row['id'];
+                    $_SESSION['check'] = hash('ripemd128', $_SERVER['REMOTE_ADDR'] .
+                        $_SERVER['HTTP_USER_AGENT']);
                     // force refresh the page
                     header("Location: thread.php");
                 } else {
