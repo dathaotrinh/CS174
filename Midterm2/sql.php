@@ -127,8 +127,16 @@ class SQL
     /*
     This function is used to choose the correct query and execute the query
     */
-    private function execute($option, $name = "", $username = "", $password = "", $thread_name = "", $file_content = "", $userid = "", $table = "")
-    {
+    private function execute(
+        $option,
+        $name = "",
+        $username = "",
+        $password = "",
+        $thread_name = "",
+        $file_content = "",
+        $userid = "",
+        $table = ""
+    ) {
         $query = "";
 
         // if working on thread table
@@ -199,7 +207,7 @@ class SQL
                 <th>Thread Name</th>
                 <th>File Content</th>
             </tr>";
-            
+
             // Iterate through each row, column in the db
             // and print the value
             for ($cursor = 0; $cursor < $rows; $cursor++) {
@@ -221,14 +229,14 @@ class SQL
             echo "
             <form method='post' action='thread.php' enctype='multipart/form-data'>
             <input type='submit' value='Expand All' name='expand'>
-            <input type='submit' value='Collapse All' name='collapse'>
             </form>";
         }
 
         $result->close(); // deallocate the result
     }
 
-    private function replace_line_break_with_html_tag($str){
+    private function replace_line_break_with_html_tag($str)
+    {
         return str_replace("/n", "<br>", $str);
     }
 }

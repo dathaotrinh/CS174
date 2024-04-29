@@ -1,5 +1,4 @@
 <?php
-// ini_set('session.use_only_cookies', 1);
 session_start();
 session_regenerate_id();
 
@@ -91,8 +90,6 @@ if (isset($_POST["signup"])) {
                 $row = $result->fetch_array(MYSQLI_ASSOC);
                 // make sure the passwords matched
                 if (password_verify($password, $row['password'])) {
-                    // start session
-                    // session_start();
                     $_SESSION['name'] = $row['name'];
                     $_SESSION['id'] = $row['id'];
                     $_SESSION['check'] = hash('ripemd128', $_SERVER['REMOTE_ADDR'] .

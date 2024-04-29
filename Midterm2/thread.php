@@ -1,5 +1,4 @@
 <?php
-// ini_set('session.use_only_cookies', 1);
 session_start();
 session_regenerate_id();
 
@@ -7,6 +6,7 @@ require_once "login.php";
 require_once "sql.php";
 require_once "common.php";
 
+const COOKIE_PATH = "/";
 const DESTROY_COOOKIE_CONSTANT = 2592000;
 $mysql = new SQL($hn, $un, $pw, $db); // start mysql connection
 
@@ -20,6 +20,9 @@ if (
         // sanitize cookies
         $session_id = Common::sanitize_input($_SESSION['id']);
         $session_name = Common::sanitize_input($_SESSION['name']);
+        if (!isset($_COOKIE['expand_flag'])) {
+            setcookie('expand_flag', "1", 0, COOKIE_PATH);
+        }
         echo "<h2>Hello " . $session_name . "!</h2>";
         echo <<<_END
             <html>
@@ -68,9 +71,14 @@ if (
                 $mysql->print_threads($session_id, 0);
             }
         } else if (isset($_POST["expand"])) {
-            $mysql->print_threads($session_id, 1);
-        } else if (isset($_POST["collapse"])) {
-            $mysql->print_threads($session_id, 0);
+            $expand_flag = Common::sanitize_input($_COOKIE['expand_flag']);
+            if ($expand_flag === "1") {
+                $mysql->print_threads($session_id, 1);
+                setcookie('expand_flag', 0, 0, COOKIE_PATH);
+            } else {
+                $mysql->print_threads($session_id, 0);
+                setcookie('expand_flag', 1, 0, COOKIE_PATH);
+            }
         } else if (isset($_POST['logout'])) {
             force_logout();
         } else {
@@ -117,7 +125,8 @@ function is_txt_file($file_name, $file_type)
 function destroy_session_and_data()
 {
     $_SESSION = array();	// Delete all the information in the array
-    setcookie(session_name(), '', time() - DESTROY_COOOKIE_CONSTANT, '/');
+    setcookie(session_name(), '', time() - DESTROY_COOOKIE_CONSTANT, COOKIE_PATH);
+    setcookie("expand_flag", '', time() - DESTROY_COOOKIE_CONSTANT, COOKIE_PATH);
     session_destroy();
 }
 
