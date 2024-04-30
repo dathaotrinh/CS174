@@ -126,6 +126,14 @@ class SQL
 
     /*
     This function is used to choose the correct query and execute the query
+    $option is a const enum declared in the top of this file
+    $name is the name of an user
+    $username is the username of an user
+    $password is the password of an user
+    $thread_name is the name of a thread
+    $file_content is the content of a file
+    $userid is the id of an user
+    $table is the name of a table in database (either user or thread in this case)
     */
     private function execute(
         $option,
