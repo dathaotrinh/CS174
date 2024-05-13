@@ -1,12 +1,12 @@
-function $(id) {
-    return document.getElementById(id)
-}
+const PASSWORD_ERROR = "Password must be more than 6 characters, include at least 1 Upper case and at least 1 Lower case";
+const NAME_ERROR = "Name should not be empty";
+const EMAIL_ERROR = "Email should not be empty and should be a proper email";
+const STUDENTID_ERROR = "Student ID should be 9 digits and should not be negative";
 
 function isValidStudentId(studentId) {
-    debugger
     let temp = Number(studentId);
     if(temp) {
-        return temp = Math.abs(temp).toString().length === 9;
+        return Math.abs(temp).toString().length === 9;
     }
     return false;
 }
@@ -27,36 +27,48 @@ function isValidName(name) {
 
 // Password must be more than 6 characters, include at least 1 Upper case and at least 1 Lower case
 function isValidPassword(password) {
-    return password.length > 6 && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{6,}$/.test(password);
+    return password.length > 6 && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{7,}$/.test(password);
 }
 
 // validate singup inputs
 function validateSignupInputs(form) {
     let errorMessage = "";
     if (!isValidName(form.name.value)) {
-        errorMessage += "Name should not be empty";
+        errorMessage += NAME_ERROR;
     } else if (!isValidStudentId(form.studentIdSignupBox.value)) {
-        errorMessage += "Student ID should be 9 digits and should not be negative";
+        errorMessage += STUDENTID_ERROR;
     } else if (!isValidEmail(form.emailSignupBox.value)) {
-        errorMessage += "Email should not be empty and should be a proper email";
+        errorMessage += EMAIL_ERROR;
     } else if (!isValidPassword(form.passwordSignupBox.value)) {
-        errorMessage += "Password must be more than 6 characters, include at least 1 Upper case and at least 1 Lower case";
+        errorMessage += PASSWORD_ERROR;
     }
     if (errorMessage !== "") {
         alert(errorMessage);
     }
 }
 
-// login fields should not be empty
+// validate login inputs
 function validateLoginInputs(form) {
-    if (form.studentIdLoginBox.value.length === 0 || form.passwordLoginBox.value.length === 0) {
-        alert("Login fields should not be empty");
+    let errorMessage = "";
+    if(!isValidStudentId(form.studentIdLoginBox.value)) {
+        errorMessage += STUDENTID_ERROR;
+    } else if(!isValidPassword(form.passwordLoginBox.value)) {
+        errorMessage += PASSWORD_ERROR;
+    }
+    if (errorMessage !== "") {
+        alert(errorMessage);
     }
 }
 
-// Lookup fields should not be empty
+// validate lookup inputs
 function validateLookupInputs(form) {
-    if (form.studentName.value.length === 0 || form.studentId.value.length === 0) {
-        alert("Lookup fields should not be empty");
+    let errorMessage = "";
+    if(!isValidName(form.studentName.value)) {
+        errorMessage += NAME_ERROR;
+    } else if(!isValidStudentId(form.studentId.value)) {
+        errorMessage += STUDENTID_ERROR;
+    } 
+    if (errorMessage !== "") {
+        alert(errorMessage);
     }
 }

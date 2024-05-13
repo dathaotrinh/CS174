@@ -1,6 +1,11 @@
 <?php
 class Common
 {
+    private const PASSWORD_ERROR = "Password must be more than 6 characters, include at least 1 Upper case and at least 1 Lower case";
+    private const NAME_ERROR = "Name should not be empty";
+    private const EMAIL_ERROR = "Email should not be empty and should be a proper email";
+    private const STUDENTID_ERROR = "Student ID should be 9 digits and should not be negative";
+
     /*
     Sanitize string
     */
@@ -66,7 +71,7 @@ class Common
     // Password must be more than 6 characters, include at least 1 Upper case and at least 1 Lower case
     public static function isValidPassword($password)
     {
-        return strlen($password) > 6 && preg_match("/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{6,}$/", $password);
+        return strlen($password) > 6 && preg_match("/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{7,}$/", $password);
     }
 
     // validate singup inputs
@@ -74,35 +79,46 @@ class Common
     {
         $errorMessage = "";
         if (!Common::isValidName($name)) {
-            $errorMessage .= "Name should not be empty";
+            $errorMessage .= Common::NAME_ERROR;
         } else if (!Common::isValidStudentId($studentId)) {
-            $errorMessage .= "Student ID should be 9 digits and should not be negative";
+            $errorMessage .= Common::STUDENTID_ERROR;
         } else if (!Common::isValidEmail($email)) {
-            $errorMessage .= "Email should not be empty and should be a proper email";
+            $errorMessage .= Common::EMAIL_ERROR;
         } else if (!Common::isValidPassword($password)) {
-            $errorMessage .= "Password must be more than 6 characters, include at least 1 Upper case and at least 1 Lower case";
+            $errorMessage .= Common::PASSWORD_ERROR;
         }
         if ($errorMessage !== "") {
             return $errorMessage;
-        } else {
-            return "";
-        }
-    }
-
-    // login fields should not be empty
-    public static function validateLoginInputs($studentId, $password)
-    {
-        if (strlen($studentId) === 0 || strlen($password) === 0) {
-            return "Login fields should not be empty";
         }
         return "";
     }
 
-    // Lookup fields should not be empty
+    // validate login inputs
+    public static function validateLoginInputs($studentId, $password)
+    {
+        $errorMessage = "";
+        if (!Common::isValidStudentId($studentId)) {
+            $errorMessage .= Common::STUDENTID_ERROR;
+        } else if (!Common::isValidPassword($password)) {
+            $errorMessage .= Common::PASSWORD_ERROR;
+        }
+        if ($errorMessage !== "") {
+            return $errorMessage;
+        }
+        return "";
+    }
+
+    // validate Lookup Inputs
     public static function validateLookupInputs($studentId, $studentName)
     {
-        if (strlen($studentId) === 0 || strlen($studentName) === 0) {
-            return "Lookup fields should not be empty";
+        $errorMessage = "";
+        if (!Common::isValidName($studentName)) {
+            $errorMessage .= Common::NAME_ERROR;
+        } else if (!Common::isValidStudentId($studentId)) {
+            $errorMessage .= Common::STUDENTID_ERROR;
+        }
+        if ($errorMessage !== "") {
+            return $errorMessage;
         }
         return "";
     }
